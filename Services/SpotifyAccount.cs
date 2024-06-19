@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json;
+
 namespace ConsumeSpotify.Services
 {
     public class SpotifyAccount : ISpotifyAccount
@@ -14,6 +16,21 @@ namespace ConsumeSpotify.Services
         {
             //throw new NotImplementedException();
 
+            var request = new HttpRequestMessage(HttpMethod.Post, "token");
+
+            request.Headers.Authorization =  new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(HeaderEncodingSelector.UTF8.GetBytes($"{clientId}:{clientSecret}")));
+
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                {
+                    "grant_type","client_credentials"
+                } });
+
+            var response = await _httpClient.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var authResult = await JsonSerializer.DeserializeAsync<>(responseStream);
         }
     }
 }

@@ -12,7 +12,8 @@ namespace ConsumeSpotify.Services
 
         public async Task<string> GetToken(string clientId, string clientSecret)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
         }
     }
 }
